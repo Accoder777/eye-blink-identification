@@ -17,12 +17,9 @@ function App() {
   // Debounced log function to avoid overloading the console
   const logResults = useRef(
     _.throttle((results) => {
-      console.log("Face Landmarks:", results.faceLandmarks);
-      console.log("Right Hand Landmarks:", results.rightHandLandmarks);
-      console.log("Left Hand Landmarks:", results.leftHandLandmarks);
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
-    }, 1000) // Log results every 3 seconds
+    }) // Log results every 2 seconds
   );
 
   const onResults = (results) => {
@@ -81,9 +78,9 @@ function App() {
     // Calculate face direction based on landmarks
     const faceLandmarks = results.faceLandmarks;
     if (faceLandmarks && faceLandmarks.length > 0) {
-      const nose = faceLandmarks[0]; // Nose tip (index 0)
-      const leftEar = faceLandmarks[234]; // Adjust to the actual index of the left ear
-      const rightEar = faceLandmarks[454]; // Adjust to the actual index of the right ear
+      const nose = faceLandmarks[1]; // Nose tip (index 1)
+      const leftEar = faceLandmarks[234]; // Left ear landmark
+      const rightEar = faceLandmarks[454]; // Right ear landmark
 
       const earMidpoint = {
         x: (leftEar.x + rightEar.x) / 2,
@@ -111,10 +108,10 @@ function App() {
       }
 
       // Eye blinking detection
-      const leftEyeUpper = faceLandmarks[159]; // Adjust for actual index
-      const leftEyeLower = faceLandmarks[145]; // Adjust for actual index
-      const rightEyeUpper = faceLandmarks[386]; // Adjust for actual index
-      const rightEyeLower = faceLandmarks[374]; // Adjust for actual index
+      const leftEyeUpper = faceLandmarks[159]; // Correct index for left upper eyelid
+      const leftEyeLower = faceLandmarks[145]; // Correct index for left lower eyelid
+      const rightEyeUpper = faceLandmarks[386]; // Correct index for right upper eyelid
+      const rightEyeLower = faceLandmarks[374]; // Correct index for right lower eyelid
 
       const leftEyeHeight = Math.abs(leftEyeUpper.y - leftEyeLower.y);
       const rightEyeHeight = Math.abs(rightEyeUpper.y - rightEyeLower.y);
@@ -129,13 +126,9 @@ function App() {
         right: rightEyeBlinking,
       };
 
-      logResults.current({ ...results, faceDirection, eyeBlinkStatus });
-      console.log("Face Direction:", faceDirection);
-      console.log("Eye Blink Status:", eyeBlinkStatus);
+      // Log results with throttling
+      logResults.current({ faceDirection, eyeBlinkStatus });
     }
-
-    // Throttle log results
-    logResults.current(results);
   };
 
   useEffect(() => {
