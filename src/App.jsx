@@ -19,7 +19,7 @@ function App() {
     _.throttle((results) => {
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
-    }) // Log results every 2 seconds
+    }, 3000 / 2) // Log results every 2 seconds
   );
 
   const onResults = (results) => {
@@ -91,7 +91,7 @@ function App() {
       const deltaY = nose.y - earMidpoint.y;
 
       let faceDirection = "";
-      const straightThreshold = 0.05; // Adjust this value based on testing
+      const straightThreshold = 0.01; // Adjust this value based on testing
       const downThreshold = 0.1; // New threshold to distinguish between straight and down
 
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
