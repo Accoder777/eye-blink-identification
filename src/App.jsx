@@ -8,7 +8,7 @@ import {
 } from "@mediapipe/holistic";
 import "./App.css";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
-import _ from "lodash"; // To help with throttling
+import _ from "lodash"; // For throttling
 
 function App() {
   const webcamRef = useRef(null);
@@ -19,8 +19,64 @@ function App() {
     _.throttle((results) => {
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
-    }, 3000 / 2) // Log results every 2 seconds
+    }, 1000) // Log results every second
   );
+
+  // Face direction detection logic
+  const detectFaceDirection = (faceLandmarks) => {
+    const nose = faceLandmarks[1]; // Nose tip
+    const leftEar = faceLandmarks[234]; // Left ear
+    const rightEar = faceLandmarks[454]; // Right ear
+
+    const earMidpoint = {
+      x: (leftEar.x + rightEar.x) / 2,
+      y: (leftEar.y + rightEar.y) / 2,
+    };
+
+    const deltaX = nose.x - earMidpoint.x;
+    const deltaY = nose.y - earMidpoint.y;
+
+    let faceDirection = "";
+    const straightThreshold = 0.08; // Adjust based on testing
+    const downThreshold = 0.0; // Threshold for distinguishing down
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      faceDirection = deltaX > 0 ? "Facing Right" : "Facing Left";
+    } else {
+      if (deltaY < -downThreshold) {
+        faceDirection = "Facing Up";
+      } else if (deltaY > straightThreshold) {
+        faceDirection = "Facing Down";
+      } else {
+        faceDirection = "Facing Straight";
+      }
+    }
+
+    return faceDirection;
+  };
+
+  // Eye blink detection logic
+  const detectEyeBlink = (faceLandmarks) => {
+    const leftEyeUpper = faceLandmarks[159]; // Left upper eyelid
+    const leftEyeLower = faceLandmarks[145]; // Left lower eyelid
+    const rightEyeUpper = faceLandmarks[386]; // Right upper eyelid
+    const rightEyeLower = faceLandmarks[374]; // Right lower eyelid
+
+    const leftEyeHeight = Math.abs(leftEyeUpper.y - leftEyeLower.y);
+    const rightEyeHeight = Math.abs(rightEyeUpper.y - rightEyeLower.y);
+
+    const eyeBlinkThreshold = 0.01; // Adjust based on testing
+
+    const leftEyeBlinking = leftEyeHeight < eyeBlinkThreshold;
+    const rightEyeBlinking = rightEyeHeight < eyeBlinkThreshold;
+
+    return {
+      left: leftEyeBlinking,
+      right: rightEyeBlinking,
+    };
+  };
+
+  // Updated eye direction detection logic
 
   const onResults = (results) => {
     if (!webcamRef.current?.video || !canvasRef.current) return;
@@ -75,56 +131,11 @@ function App() {
 
     canvasCtx.restore();
 
-    // Calculate face direction based on landmarks
+    // Calculate face direction, eye blink, and eyes direction
     const faceLandmarks = results.faceLandmarks;
     if (faceLandmarks && faceLandmarks.length > 0) {
-      const nose = faceLandmarks[1]; // Nose tip (index 1)
-      const leftEar = faceLandmarks[234]; // Left ear landmark
-      const rightEar = faceLandmarks[454]; // Right ear landmark
-
-      const earMidpoint = {
-        x: (leftEar.x + rightEar.x) / 2,
-        y: (leftEar.y + rightEar.y) / 2,
-      };
-
-      const deltaX = nose.x - earMidpoint.x;
-      const deltaY = nose.y - earMidpoint.y;
-
-      let faceDirection = "";
-      const straightThreshold = 0.01; // Adjust this value based on testing
-      const downThreshold = 0.1; // New threshold to distinguish between straight and down
-
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        faceDirection = deltaX > 0 ? "Facing Right" : "Facing Left";
-      } else {
-        // Check vertical position for up/down/straight
-        if (deltaY < -downThreshold) {
-          faceDirection = "Facing Down";
-        } else if (deltaY > straightThreshold) {
-          faceDirection = "Facing Straight";
-        } else {
-          faceDirection = "Facing Up";
-        }
-      }
-
-      // Eye blinking detection
-      const leftEyeUpper = faceLandmarks[159]; // Correct index for left upper eyelid
-      const leftEyeLower = faceLandmarks[145]; // Correct index for left lower eyelid
-      const rightEyeUpper = faceLandmarks[386]; // Correct index for right upper eyelid
-      const rightEyeLower = faceLandmarks[374]; // Correct index for right lower eyelid
-
-      const leftEyeHeight = Math.abs(leftEyeUpper.y - leftEyeLower.y);
-      const rightEyeHeight = Math.abs(rightEyeUpper.y - rightEyeLower.y);
-
-      const eyeBlinkThreshold = 0.01; // Adjust this threshold based on testing
-
-      const leftEyeBlinking = leftEyeHeight < eyeBlinkThreshold;
-      const rightEyeBlinking = rightEyeHeight < eyeBlinkThreshold;
-
-      const eyeBlinkStatus = {
-        left: leftEyeBlinking,
-        right: rightEyeBlinking,
-      };
+      const faceDirection = detectFaceDirection(faceLandmarks);
+      const eyeBlinkStatus = detectEyeBlink(faceLandmarks);
 
       // Log results with throttling
       logResults.current({ faceDirection, eyeBlinkStatus });
