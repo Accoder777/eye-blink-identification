@@ -65,7 +65,7 @@ function App() {
     const leftEyeHeight = Math.abs(leftEyeUpper.y - leftEyeLower.y);
     const rightEyeHeight = Math.abs(rightEyeUpper.y - rightEyeLower.y);
 
-    const eyeBlinkThreshold = 0.01; // Adjust based on testing
+    const eyeBlinkThreshold = 0.015; // Adjust based on testing
 
     const leftEyeBlinking = leftEyeHeight < eyeBlinkThreshold;
     const rightEyeBlinking = rightEyeHeight < eyeBlinkThreshold;
