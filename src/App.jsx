@@ -22,7 +22,7 @@ function App() {
     }, 1000) // Log results every second
   );
 
-  // Face direction detection logic
+  // Face direction detection logic with improved tilted differentiation
   const detectFaceDirection = (faceLandmarks) => {
     const nose = faceLandmarks[1]; // Nose tip
     const leftEar = faceLandmarks[234]; // Left ear
@@ -33,22 +33,33 @@ function App() {
       y: (leftEar.y + rightEar.y) / 2,
     };
 
-    const deltaX = nose.x - earMidpoint.x;
-    const deltaY = nose.y - earMidpoint.y;
+    const deltaX = nose.x - earMidpoint.x; // Horizontal difference
+    const deltaY = nose.y - earMidpoint.y; // Vertical difference
 
     let faceDirection = "";
-    const straightThreshold = 0.08; // Adjust based on testing
-    const downThreshold = 0.0; // Threshold for distinguishing down
 
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      faceDirection = deltaX > 0 ? "Facing Right" : "Facing Left";
+    const horizontalThreshold = 0.04; // More sensitive for horizontal direction
+    const verticalThreshold = 0.06; // Slightly less sensitive for vertical direction
+    const tiltThreshold = 0.03; // Least sensitive for detecting head tilt
+
+    if (Math.abs(leftEar.y - rightEar.y) > tiltThreshold) {
+      // Head is tilted
+      faceDirection = leftEar.y > rightEar.y ? "Tilted Left" : "Tilted Right";
     } else {
-      if (deltaY < -downThreshold) {
-        faceDirection = "Facing Up";
-      } else if (deltaY > straightThreshold) {
-        faceDirection = "Facing Down";
+      // Determine horizontal direction
+      if (deltaX > horizontalThreshold) {
+        faceDirection = "Facing Right";
+      } else if (deltaX < -horizontalThreshold) {
+        faceDirection = "Facing Left";
       } else {
         faceDirection = "Facing Straight";
+      }
+
+      // Add vertical differentiation
+      if (deltaY > verticalThreshold) {
+        faceDirection = "Facing Down";
+      } else if (deltaY < -verticalThreshold) {
+        faceDirection = "Facing Up";
       }
     }
 
@@ -75,8 +86,6 @@ function App() {
       right: rightEyeBlinking,
     };
   };
-
-  // Updated eye direction detection logic
 
   const onResults = (results) => {
     if (!webcamRef.current?.video || !canvasRef.current) return;
