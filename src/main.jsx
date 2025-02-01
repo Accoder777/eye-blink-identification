@@ -1,11 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import MusicPlayer from './components/MusicPlayer/index.jsx'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
-    <MusicPlayer />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StrictMode>,
 )
