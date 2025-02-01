@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Webcam from "react-webcam";
 import { Camera } from "@mediapipe/camera_utils";
 import {
@@ -6,7 +6,7 @@ import {
   HAND_CONNECTIONS,
   Holistic,
 } from "@mediapipe/holistic";
-import "./App.css";
+import "./css/App.css";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import _ from "lodash"; // For throttling
 
