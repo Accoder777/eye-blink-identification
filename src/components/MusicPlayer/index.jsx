@@ -1,26 +1,23 @@
-import { useState, useRef } from 'react';
+import React from "react";
 
-const MusicPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
+const MusicPlayer = ({ isPlaying }) => {
+  const audioRef = React.useRef(null);
 
-  const togglePlayPause = () => {
+  React.useEffect(() => {
     if (isPlaying) {
-      audioRef.current.pause();
-    } else {
       audioRef.current.play();
+      console.log("play");
+    } else {
+      audioRef.current.pause();
+      console.log("pause");
     }
-    setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying]);
 
   return (
     <div>
-      <audio ref={audioRef} src="/music/music.mp3" />
-      <button onClick={togglePlayPause}>
-        {isPlaying ? 'Pause' : 'Play'}
-      </button>
+      <audio ref={audioRef} src="/music/redmi.mp3" />
     </div>
   );
 };
 
-export default MusicPlayer;
+export default React.memo(MusicPlayer);

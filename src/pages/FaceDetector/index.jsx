@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import styles from './style.module.css'
 import Webcam from "react-webcam";
 import { Camera } from "@mediapipe/camera_utils";
 import {
@@ -8,8 +9,12 @@ import {
 } from "@mediapipe/holistic";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import _ from "lodash"; // For throttling
+import MusicPlayer from "../../components/MusicPlayer";
 
 function FaceDetector() {
+  // state
+  const [warning, setWarning] = useState(false)
+
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -18,9 +23,19 @@ function FaceDetector() {
     _.throttle((results) => {
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
+
+      if(results.eyeBlinkStatus.left){
+        setWarning(true)
+      }else{
+        setWarning(false)
+      }
     }, 2000) // Log results every second
   );
 
+  // checking for sleeping
+  // const isBlinked = ( left,right ) =>{
+    //....
+  // };
   // Face direction detection logic with improved tilted differentiation
   const detectFaceDirection = (faceLandmarks) => {
     const nose = faceLandmarks[1]; // Nose tip
@@ -192,8 +207,10 @@ function FaceDetector() {
   }, []);
 
   return (
-    <div className="App">
+    <div className={styles.container}>
+      <MusicPlayer isPlaying={warning}/>
       <Webcam
+        className={styles.webCam}
         ref={webcamRef}
         style={{
           position: "absolute",

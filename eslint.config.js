@@ -17,7 +17,7 @@ export default [
         sourceType: 'module',
       },
     },
-    settings: { react: { version: '18.3' } },
+    settings: { react: { version: 'detect' } },
     plugins: {
       react,
       'react-hooks': reactHooks,
@@ -29,6 +29,9 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      'react/prop-types': 'off', // Agar PropTypes ishlatilmasa, bunga ehtiyoj yo‘q
+      'react/jsx-props-no-spreading': 'off', // Propslarni tarqatishni cheklamaslik uchun
+    
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
