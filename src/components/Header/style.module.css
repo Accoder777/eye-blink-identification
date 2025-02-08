@@ -1,0 +1,54 @@
+.headerContainer{
+    background-color: transparent;
+    height: 100px;
+}
+
+.headerContainer{
+    width: 100vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+}
+
+.headerList{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: green;
+    margin: auto;
+
+}
+
+.logo{
+    width: 53px;
+    height: 11px;
+
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.routeList{
+    width: 400px;
+    min-height: 11px;
+
+    display: flex;
+    justify-content: space-around;
+}
+.routeList span{
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    color: #fff;
+
+    cursor: pointer;
+}
+
+.otherPage{
+
+}

@@ -15,7 +15,7 @@ const MusicPlayer = ({ isPlaying }) => {
 
   return (
     <div>
-      <audio ref={audioRef} src="/music/redmi.mp3" />
+      <audio ref={audioRef} src="/music/sirena.mp3" />
     </div>
   );
 };
