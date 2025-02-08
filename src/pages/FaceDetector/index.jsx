@@ -11,10 +11,17 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import _ from "lodash"; // For throttling
 import MusicPlayer from "../../components/MusicPlayer";
 
+
 function FaceDetector() {
+  // windows reload
+  // window.location.reload();
+
   // state
   const [warning, setWarning] = useState(false)
 
+  // array for collect information
+  let arrayLeft = [];
+  let arrayRight = [];
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -24,18 +31,31 @@ function FaceDetector() {
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
 
-      if(results.eyeBlinkStatus.left){
-        setWarning(true)
-      }else{
-        setWarning(false)
-      }
-    }, 2000) // Log results every second
+      isBlinked(results.eyeBlinkStatus.left,results.eyeBlinkStatus.right)
+    }, 2000) // Log results every two second
   );
 
-  // checking for sleeping
-  // const isBlinked = ( left,right ) =>{
-    //....
-  // };
+  const isBlinked = ( left,right ) =>{
+    console.log(left,right)
+    if(arrayLeft.length < 3 && arrayRight.length < 3){
+      arrayLeft.push(left)
+      arrayRight.push(right)
+    } else{
+      arrayLeft.shift()
+      arrayLeft.push(left)
+
+      arrayRight.shift()
+      arrayRight.push(right)
+      
+      
+      if(arrayLeft.every((item)=>item === true) || arrayRight.every((item)=>item === true)){
+        setWarning(true)
+      }
+      
+      console.log("length of arrayRight = ", arrayRight.length)
+      console.log("elements of arrayRight = ", arrayRight)
+    }
+  };
   // Face direction detection logic with improved tilted differentiation
   const detectFaceDirection = (faceLandmarks) => {
     const nose = faceLandmarks[1]; // Nose tip

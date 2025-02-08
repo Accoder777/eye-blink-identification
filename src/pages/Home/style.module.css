@@ -1,8 +1,33 @@
 .container{
     height: 100vh;
     background-image: url("/assets/img/bg-image2.png");
-    /* background-color: red; */
+
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+}
+
+.nameOfStartUp{
+    min-width: 234px;
+    min-height: 51px;
+    margin: 200px 100px;
+    margin-bottom: 0;
+
+    font-family: "Play", serif;
+    font-weight: 400;
+    font-size: 100px;
+    color: #5a8dcf;
+}
+
+.desc{
+    
+    font-family: "Play", serif;
+    margin: 20px 100px;
+    width: 800px;
+    font-weight: 400;
+    font-size: 40px;
+    color: #fff;
+}
+.buttonPosition{
+    margin: 100px;
 }
