@@ -15,7 +15,7 @@ const MusicPlayer = ({ isPlaying }) => {
 
   return (
     <div>
-      <audio ref={audioRef} src="/music/sirena.mp3" />
+      <audio loop ref={audioRef} src="/music/siren.mp3" />
     </div>
   );
 };
