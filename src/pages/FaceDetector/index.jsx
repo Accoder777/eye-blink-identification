@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import styles from './style.module.css'
+import styles from "./style.module.css";
 import Webcam from "react-webcam";
 import { Camera } from "@mediapipe/camera_utils";
 import {
@@ -11,13 +11,12 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import _ from "lodash"; // For throttling
 import MusicPlayer from "../../components/MusicPlayer";
 
-
 function FaceDetector() {
   // windows reload
   // window.location.reload();
 
   // state
-  const [warning, setWarning] = useState(false)
+  const [warning, setWarning] = useState(false);
 
   // array for collect information
   let arrayLeft = [];
@@ -31,30 +30,36 @@ function FaceDetector() {
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
 
-      isBlinked(results.eyeBlinkStatus.left,results.eyeBlinkStatus.right)
+      isBlinked(results.eyeBlinkStatus.left, results.eyeBlinkStatus.right);
     }, 2000) // Log results every two second
   );
 
-  const isBlinked = ( left,right ) =>{
-    console.log(left,right)
-    if(arrayLeft.length < 3 && arrayRight.length < 3){
-      arrayLeft.push(left)
-      arrayRight.push(right)
-    } else{
-      arrayLeft.shift()
-      arrayLeft.push(left)
+  const isBlinked = (left, right) => {
+    console.log(left, right);
+    if (arrayLeft.length < 3 && arrayRight.length < 3) {
+      arrayLeft.push(left);
+      arrayRight.push(right);
+    } else {
+      arrayLeft.shift();
+      arrayLeft.push(left);
 
-      arrayRight.shift()
-      arrayRight.push(right)
-      
-      
-      if(arrayLeft.every((item)=>item === true) || arrayRight.every((item)=>item === true)){
-        setWarning(true)
+      arrayRight.shift();
+      arrayRight.push(right);
+
+      if (
+        arrayLeft.every((item) => item === true) ||
+        arrayRight.every((item) => item === true)
+      ) {
+        setWarning(true);
       }
-      
-      console.log("length of arrayRight = ", arrayRight.length)
-      console.log("elements of arrayRight = ", arrayRight)
+
+      console.log("length of arrayRight = ", arrayRight.length);
+      console.log("elements of arrayRight = ", arrayRight);
     }
+
+    console.log(
+      "-------------------------------------------------------------------------------------"
+    );
   };
   // Face direction detection logic with improved tilted differentiation
   const detectFaceDirection = (faceLandmarks) => {
@@ -226,39 +231,18 @@ function FaceDetector() {
     };
   }, []);
 
+  const stopPlay = () => {
+    setWarning(false);
+  };
+
   return (
     <div className={styles.container}>
-      <MusicPlayer isPlaying={warning}/>
-      <Webcam
-        className={styles.webCam}
-        ref={webcamRef}
-        style={{
-          position: "absolute",
-          marginLeft: "auto",
-          marginRight: "auto",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          zIndex: 9,
-          width: 1200,
-          height: 800,
-          transform: "scaleX(-1)", // Flip the webcam feed horizontally
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          marginLeft: "auto",
-          marginRight: "auto",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          zIndex: 9,
-          width: 1200,
-          height: 800,
-        }}
-      />
+      <MusicPlayer isPlaying={warning} />
+      <Webcam className={styles.webCam} ref={webcamRef} />
+      <canvas className={styles.canvasStyle} ref={canvasRef} />
+      <button onClick={stopPlay} className={styles.stopBtn}>
+        Stop
+      </button>
     </div>
   );
 }
