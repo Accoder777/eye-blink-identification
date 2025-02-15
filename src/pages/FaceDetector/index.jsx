@@ -12,15 +12,13 @@ import _ from "lodash"; // For throttling
 import MusicPlayer from "../../components/MusicPlayer";
 
 function FaceDetector() {
-  // windows reload
-  // window.location.reload();
-
   // state
   const [warning, setWarning] = useState(false);
 
   // array for collect information
   let arrayLeft = [];
   let arrayRight = [];
+  let arrayFaceDirection = [];
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -30,15 +28,23 @@ function FaceDetector() {
       console.log("Face Direction:", results.faceDirection); // Log face direction
       console.log("Eye Blink Status:", results.eyeBlinkStatus); // Log eye blink status
 
-      isBlinked(results.eyeBlinkStatus.left, results.eyeBlinkStatus.right);
+      isBlinked(
+        results.eyeBlinkStatus.left,
+        results.eyeBlinkStatus.right,
+        results.faceDirection
+      );
     }, 2000) // Log results every two second
   );
 
-  const isBlinked = (left, right) => {
-    console.log(left, right);
+  const isBlinked = (left, right, faceDirection) => {
     if (arrayLeft.length < 3 && arrayRight.length < 3) {
       arrayLeft.push(left);
       arrayRight.push(right);
+      if (faceDirection === "Facing Down") {
+        arrayFaceDirection.push(true);
+      } else {
+        arrayFaceDirection.push(false);
+      }
     } else {
       arrayLeft.shift();
       arrayLeft.push(left);
@@ -46,20 +52,33 @@ function FaceDetector() {
       arrayRight.shift();
       arrayRight.push(right);
 
+      arrayFaceDirection.shift();
+      if (faceDirection === "Facing Down") {
+        arrayFaceDirection.push(true);
+      } else {
+        arrayFaceDirection.push(false);
+      }
+
       if (
-        arrayLeft.every((item) => item === true) ||
-        arrayRight.every((item) => item === true)
+        arrayLeft.every((item) => item === true) &&
+        arrayRight.every((item) => item === true) 
+        // && arrayFaceDirection.every((item) => item === true)
       ) {
         setWarning(true);
       }
 
-      console.log("length of arrayRight = ", arrayRight.length);
-      console.log("elements of arrayRight = ", arrayRight);
+      console.log("🚀 ~ isBlinked ~ arrayRight:", arrayRight);
+      console.log("🚀 ~ isBlinked ~ arrayLeft:", arrayLeft);
+      console.log("🚀 ~ isBlinked ~ arrayFaceDirection:", arrayFaceDirection);
     }
 
-    console.log(
-      "-------------------------------------------------------------------------------------"
-    );
+    if (warning) {
+      console.log("look");
+    } else {
+      console.log(
+        "-------------------------------------------------------------------------------------"
+      );
+    }
   };
   // Face direction detection logic with improved tilted differentiation
   const detectFaceDirection = (faceLandmarks) => {
