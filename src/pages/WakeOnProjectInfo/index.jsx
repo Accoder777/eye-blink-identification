@@ -120,7 +120,7 @@ const WakeOnProjectInfo = () => {
             </Stack>
           </div>
           <div className={styles.picture}>
-            <img src="/assets/img/logo-transparent.png" alt="logo" />
+            <img src="/assets/img/logo.png" alt="logo" />
           </div>
         </div>
       </div>
