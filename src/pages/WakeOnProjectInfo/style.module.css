@@ -1,0 +1,35 @@
+.container{
+    text-align: center;
+    
+    height: 100vh;
+    background-image: url("/assets/img/bg-image-about/bg-image-about.png");
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+
+}
+
+.mainContainer{
+    display: flex;
+}
+
+.textContainer{
+    color: white;
+    overflow: scroll;
+    max-width: 40vw;
+    margin: auto;
+    height: 60vh;
+}
+.textContainer::-webkit-scrollbar{
+    height: 0;
+}
+
+.picture{
+    background-color: #ffffff2f;
+}
+
+.picture img{
+    height: 500px;
+    border-radius: 50%;
+}
