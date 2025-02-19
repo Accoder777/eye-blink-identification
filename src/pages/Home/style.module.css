@@ -1,33 +1,41 @@
 .container{
     height: 100vh;
-    background-image: url("/assets/img/bg-image2.png");
-
+    /* background-image: url("https://th.bing.com/th/id/R.f93d67fbca2a40aac876f7aff3e8ad8d?rik=FQw87QUVNz2JYQ&pid=ImgRaw&r=0");
+    background-image: url('../../../public/assets/gif/bg-gif.gif');
+    bg-vi
     background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
+    background-size: cover; */
+}
+
+.mainContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.textContainer{
+    padding: 3rem 6rem;
+}
+.imgContainer{
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: center;
 }
 
 .nameOfStartUp{
-    min-width: 234px;
-    min-height: 51px;
-    margin: 200px 100px;
-    margin-bottom: 0;
-
-    font-family: "Play", serif;
-    font-weight: 400;
-    font-size: 100px;
-    color: #5a8dcf;
+    color: #000ACF;
+    font-size: 10rem;
 }
 
 .desc{
-    
-    font-family: "Play", serif;
-    margin: 20px 100px;
-    width: 800px;
-    font-weight: 400;
-    font-size: 40px;
-    color: #fff;
+    width: 700px;
+    padding: 2rem 0;
+    font-size: xx-large;
+    color: #000ACF;
+
 }
-.buttonPosition{
-    margin: 100px;
+
+.imgContainer img{
+    height: 600px;
 }
